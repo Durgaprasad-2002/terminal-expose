@@ -26,23 +26,18 @@ Examples:
   terminal-expose zsh
   terminal-expose bash -lc "cd ~/project && npm test"
   terminal-expose --public bash
-  terminal-expose --public --subdomain my-demo bash
 
 Environment:
-  PORT=3000
+  PORT=5555
   HOST=0.0.0.0
   SESSION_TOKEN=<custom-token>
-  EXTERNAL_URL=http://YOUR_PUBLIC_IP:3000
+  EXTERNAL_URL=http://YOUR_PUBLIC_IP:5555
   PUBLIC_TUNNEL=1
-  TUNNEL_SUBDOMAIN=my-demo
-  TUNNEL_HOST=https://localtunnel.me
   TERM_COLS=120
   TERM_ROWS=40
 
 Options:
   --public, --tunnel          Create a public HTTPS tunnel.
-  --subdomain <name>          Request a localtunnel subdomain.
-  --tunnel-host <url>         Use a different localtunnel server.
 `);
   process.exit(0);
 }

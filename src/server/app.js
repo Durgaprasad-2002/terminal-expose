@@ -1,7 +1,6 @@
 const express = require("express");
 const path = require("path");
 const { SESSION_TOKEN } = require("../config/env");
-const { VIEWER_HTML } = require("../templates/viewer");
 
 function createApp(ioGetter, terminalSession) {
   const app = express();
@@ -37,7 +36,7 @@ function createApp(ioGetter, terminalSession) {
       return res.status(403).send("Invalid session token");
     }
 
-    res.type("html").send(VIEWER_HTML);
+    res.sendFile(path.join(__dirname, "../templates/viewer.html"));
   });
 
   return app;

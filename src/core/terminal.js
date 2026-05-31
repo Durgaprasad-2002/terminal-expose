@@ -15,8 +15,6 @@ class TerminalSession {
 
     this.shell = pty.spawn(shellCommand, shellArgs, {
       name: "xterm-256color",
-      // cols: TERM_COLS,
-      // rows: TERM_ROWS,
       cwd: WORKDIR,
       env: {
         ...process.env,
@@ -24,33 +22,40 @@ class TerminalSession {
       },
     });
 
+    // verify if terminal was available or not bro
     if (process.stdin.isTTY) {
+      // listening to every stroke of host terminal input
       process.stdin.setRawMode(true);
     }
     process.stdin.resume();
+
+    // write to shell after getting the input from host terminal
     process.stdin.on("data", (data) => {
       this.shell.write(data);
     });
 
+    // after getting the data from shell writing it to host terminal
     this.shell.onData((data) => {
       if (ECHO_TO_STDOUT) {
+        // this write the user input to the host terminal
         process.stdout.write(data);
       }
 
       this.buffer += data;
-
       if (this.buffer.length > MAX_BUFFER) {
         this.buffer = this.buffer.slice(-MAX_BUFFER);
       }
 
+      // ! need to verify it was need or not
       this.emit("data", data);
     });
 
+    // if the terminal was exited in host machine exit the process and inform the listeing clients
     this.shell.onExit(({ exitCode, signal }) => {
       this.exit = { exitCode, signal };
       this.emit("exit", this.exit);
 
-      console.log(`Terminal command exited: code=${exitCode} signal=${signal}`);
+      console.log(`Terminal-Expose exited: code=${exitCode} signal=${signal}`);
 
       if (process.stdin.isTTY) {
         process.stdin.setRawMode(false);
