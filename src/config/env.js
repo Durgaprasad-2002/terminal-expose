@@ -1,6 +1,6 @@
 const crypto = require("crypto");
 
-const PORT = Number(process.env.PORT || 9999);
+const PORT = Number(process.env.PORT || 1111);
 const HOST = process.env.HOST || "0.0.0.0";
 const MAX_BUFFER = Number(process.env.MAX_BUFFER || 100000);
 const ECHO_TO_STDOUT = process.env.ECHO_TO_STDOUT !== "0";

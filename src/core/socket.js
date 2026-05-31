@@ -29,6 +29,14 @@ function setupSocket(server, terminalSession) {
       socket.emit("terminal-exit", terminalSession.exit);
     }
 
+    socket.on("terminal-input", (data) => {
+      terminalSession.write(data);
+    });
+
+    socket.on("terminal-resize", ({ cols, rows }) => {
+      terminalSession.resize(cols, rows);
+    });
+
     socket.on("disconnect", () => {
       console.log(`Viewer disconnected: ${socket.id}`);
     });

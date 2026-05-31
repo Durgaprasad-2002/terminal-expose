@@ -68,6 +68,21 @@ const server = http.createServer(app);
 // Initialize Socket.io
 ioInstance = setupSocket(server, terminalSession);
 
+// Close server and process gracefully on terminal exit
+terminalSession.on("exit", () => {
+  console.log("Shutting down server port...");
+  server.close(() => {
+    // Ensure process is fully killed after server cleanly exits
+    process.exit(terminalSession.exit?.exitCode ?? 0);
+  });
+
+  // Force exit if server.close() hangs (e.g., active keep-alive connections)
+  setTimeout(
+    () => process.exit(terminalSession.exit?.exitCode ?? 0),
+    1000,
+  ).unref();
+});
+
 server.listen(PORT, HOST, () => {
   const localUrl = `http://localhost:${PORT}/s/${SESSION_TOKEN}`;
   const externalUrl = EXTERNAL_URL

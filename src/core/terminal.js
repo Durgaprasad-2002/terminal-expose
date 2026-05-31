@@ -15,8 +15,8 @@ class TerminalSession {
 
     this.shell = pty.spawn(shellCommand, shellArgs, {
       name: "xterm-256color",
-      cols: TERM_COLS,
-      rows: TERM_ROWS,
+      // cols: TERM_COLS,
+      // rows: TERM_ROWS,
       cwd: WORKDIR,
       env: {
         ...process.env,
@@ -55,11 +55,23 @@ class TerminalSession {
       if (process.stdin.isTTY) {
         process.stdin.setRawMode(false);
       }
-
-      setTimeout(() => {
-        process.exit(exitCode ?? 0);
-      }, 250);
     });
+  }
+
+  write(data) {
+    if (this.shell) {
+      this.shell.write(data);
+    }
+  }
+
+  resize(cols, rows) {
+    if (this.shell && cols && rows) {
+      try {
+        this.shell.resize(cols, rows);
+      } catch (err) {
+        console.error("Failed to resize terminal", err);
+      }
+    }
   }
 
   on(event, callback) {
