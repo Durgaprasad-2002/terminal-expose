@@ -1,0 +1,86 @@
+# Terminal Expose
+
+Read-only terminal sharing from your own machine.
+
+`terminal-expose` starts a real shell or command on the host where it is run, prints a private viewer URL, and streams the terminal output to anyone who opens that URL.
+
+## Install
+
+```sh
+npm install -g terminal-expose
+```
+
+## Use
+
+Start your default shell:
+
+```sh
+terminal-expose
+```
+
+Start a specific shell:
+
+```sh
+terminal-expose bash
+terminal-expose zsh
+```
+
+Run a command:
+
+```sh
+terminal-expose bash -lc "npm test"
+```
+
+The CLI prints a URL like:
+
+```text
+Local URL : http://localhost:3000/s/<token>
+LAN URL   : http://192.168.1.10:3000/s/<token>
+```
+
+Share the full token URL with the viewer. Viewers are read-only.
+
+## Public Internet Access
+
+For quick public sharing, start a localtunnel:
+
+```sh
+terminal-expose --public bash
+```
+
+The CLI prints a URL like:
+
+```text
+Public URL: https://random-name.loca.lt/s/<token>
+Tunnel password: <localtunnel-password>
+```
+
+You can request a custom localtunnel subdomain:
+
+```sh
+terminal-expose --public --subdomain my-terminal-demo bash
+```
+
+The tunnel URL works outside your Wi-Fi as long as the CLI is still running. If `loca.lt` asks the viewer for a tunnel password, share the printed tunnel password too.
+
+For a permanent setup, run it on a public server or forward TCP port `3000` to the machine running the CLI:
+
+```sh
+EXTERNAL_URL="http://YOUR_PUBLIC_IP:3000" terminal-expose bash
+```
+
+## Options
+
+Use environment variables:
+
+```sh
+PORT=4000 terminal-expose bash
+SESSION_TOKEN="change-this-secret" terminal-expose bash
+PUBLIC_TUNNEL=1 terminal-expose bash
+TUNNEL_SUBDOMAIN="my-terminal-demo" PUBLIC_TUNNEL=1 terminal-expose bash
+TERM_COLS=160 TERM_ROWS=48 terminal-expose bash
+```
+
+## Security
+
+Anyone with the full URL can watch the session. Do not type passwords, API keys, or private commands in a shared terminal.

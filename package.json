@@ -1,0 +1,44 @@
+{
+  "name": "@durgaprasadthota31/terminal-expose",
+  "version": "1.0.2",
+  "description": "Read-only terminal session sharing over HTTP and WebSocket.",
+  "main": "index.js",
+  "bin": {
+    "terminal-expose": "index.js"
+  },
+  "files": [
+    "index.js",
+    "public"
+  ],
+  "scripts": {
+    "start": "node index.js",
+    "start:shell": "node index.js bash",
+    "start:public": "node index.js --public bash",
+    "test": "node --check index.js",
+    "pack:dry": "npm pack --dry-run"
+  },
+  "keywords": [
+    "terminal",
+    "shell",
+    "sharing",
+    "xterm",
+    "pty",
+    "websocket"
+  ],
+  "author": "",
+  "license": "ISC",
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "express": "^5.2.1",
+    "localtunnel": "^2.0.2",
+    "node-pty": "^1.1.0",
+    "socket.io": "^4.8.3"
+  },
+  "overrides": {
+    "localtunnel": {
+      "axios": "^1.16.1"
+    }
+  }
+}
