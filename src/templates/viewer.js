@@ -1,4 +1,4 @@
-<!doctype html>
+module.exports = `<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -264,7 +264,7 @@
           cursorBlink: true,
           convertEol: true,
           fontFamily:
-            `"JetBrains Mono", monospace`,
+            \`"JetBrains Mono", monospace\`,
           fontSize: 14,
           lineHeight: 1.3,
           scrollback: 20000,
@@ -480,3 +480,4 @@
     </script>
   </body>
 </html>
+`;

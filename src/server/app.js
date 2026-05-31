@@ -1,12 +1,8 @@
 const express = require("express");
-const path = require("path");
 const { SESSION_TOKEN } = require("../config/env");
 
 function createApp(ioGetter, terminalSession) {
   const app = express();
-
-  // We are referring to public directory in root
-  app.use("/assets", express.static(path.join(__dirname, "../../public")));
 
   app.get("/", (_, res) => {
     res.type("html").send(`<!doctype html>
@@ -36,7 +32,8 @@ function createApp(ioGetter, terminalSession) {
       return res.status(403).send("Invalid session token");
     }
 
-    res.sendFile(path.join(__dirname, "../templates/viewer.html"));
+    const viewerHtml = require("../templates/viewer.js");
+    res.type("html").send(viewerHtml);
   });
 
   return app;
