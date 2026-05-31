@@ -15,6 +15,7 @@ const rawArgs = process.argv.slice(2);
 
 if (rawArgs.includes("--help") || rawArgs.includes("-h")) {
   console.log(`Terminal Expose
+Interactive terminal session sharing over HTTP and WebSocket.
 
 Usage:
   terminal-expose [options] [command] [args...]
@@ -110,7 +111,7 @@ server.listen(PORT, HOST, () => {
   }
 
   console.log("");
-  console.log("Share only the session URL with trusted viewers.");
+  console.log("Share only the session URL with trusted collaborators.");
   console.log("Use --public for internet access without router forwarding.");
   console.log("==============================\n");
 });

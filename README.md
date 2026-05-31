@@ -1,8 +1,8 @@
 # Terminal Expose
 
-Read-only terminal sharing from your own machine.
+Interactive terminal sharing from your own machine.
 
-`terminal-expose` starts a real shell or command on the host where it is run, prints a private viewer URL, and streams the terminal output to anyone who opens that URL.
+`terminal-expose` starts a real shell or command on the host where it is run, prints a private URL, and allows collaborative, interactive access to anyone who opens that URL.
 
 ## Install
 
@@ -38,7 +38,7 @@ Local URL : http://localhost:3000/s/<token>
 LAN URL   : http://192.168.1.10:3000/s/<token>
 ```
 
-Share the full token URL with the viewer. Viewers are read-only.
+Share the full token URL with your collaborators. They will have full read and write access to the terminal.
 
 ## Public Internet Access
 
@@ -61,7 +61,7 @@ You can request a custom localtunnel subdomain:
 terminal-expose --public --subdomain my-terminal-demo bash
 ```
 
-The tunnel URL works outside your Wi-Fi as long as the CLI is still running. If `loca.lt` asks the viewer for a tunnel password, share the printed tunnel password too.
+The tunnel URL works outside your Wi-Fi as long as the CLI is still running. If `loca.lt` asks the user for a tunnel password, share the printed tunnel password too.
 
 For a permanent setup, run it on a public server or forward TCP port `3000` to the machine running the CLI:
 
@@ -83,4 +83,4 @@ TERM_COLS=160 TERM_ROWS=48 terminal-expose bash
 
 ## Security
 
-Anyone with the full URL can watch the session. Do not type passwords, API keys, or private commands in a shared terminal.
+Anyone with the full URL can view and interact with the session. Do not type passwords, API keys, or private commands in a shared terminal.

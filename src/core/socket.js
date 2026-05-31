@@ -19,7 +19,7 @@ function setupSocket(server, terminalSession) {
   });
 
   io.on("connection", (socket) => {
-    console.log(`Viewer connected: ${socket.id}`);
+    console.log(`Client connected: ${socket.id}`);
 
     if (terminalSession.buffer) {
       socket.emit("terminal-output", terminalSession.buffer);
@@ -38,7 +38,7 @@ function setupSocket(server, terminalSession) {
     });
 
     socket.on("disconnect", () => {
-      console.log(`Viewer disconnected: ${socket.id}`);
+      console.log(`Client disconnected: ${socket.id}`);
     });
   });
 

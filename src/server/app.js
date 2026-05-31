@@ -27,7 +27,7 @@ function createApp(ioGetter, terminalSession) {
     const io = ioGetter();
     res.json({
       ok: true,
-      viewers: io ? io.engine.clientsCount : 0,
+      clients: io ? io.engine.clientsCount : 0,
       exited: terminalSession.exit,
     });
   });
