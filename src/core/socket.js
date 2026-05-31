@@ -3,6 +3,7 @@ const { SESSION_TOKEN } = require("../config/env");
 
 function setupSocket(server, terminalSession) {
   const io = new Server(server, {
+    transports: ["websocket"],
     cors: {
       origin: false,
     },

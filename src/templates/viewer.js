@@ -301,6 +301,7 @@ module.exports = `<!doctype html>
 
       const socket =
         io({
+          transports: ["websocket"],
           auth:{
             token
           },
