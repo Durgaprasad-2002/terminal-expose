@@ -139,7 +139,7 @@ module.exports = `<!doctype html>
 
 
       button {
-        padding: 5px 10px;
+        padding: 0px 10px;
 
         cursor: pointer;
 
@@ -306,7 +306,7 @@ module.exports = `<!doctype html>
             token
           },
           reconnection: true,
-          reconnectionAttempts:20,
+          reconnectionAttempts: 60,
           timeout:5000
         });
 

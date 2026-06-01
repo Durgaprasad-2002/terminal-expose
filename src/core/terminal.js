@@ -11,6 +11,7 @@ class TerminalSession {
   constructor(shellCommand, shellArgs) {
     this.buffer = "";
     this.exit = null;
+    this.readyForEcho = false;
     this.listeners = [];
 
     this.shell = pty.spawn(shellCommand, shellArgs, {
@@ -25,7 +26,11 @@ class TerminalSession {
     // verify if terminal was available or not bro
     if (process.stdin.isTTY) {
       // listening to every stroke of host terminal input
-      process.stdin.setRawMode(true);
+      try {
+        process.stdin.setRawMode(true);
+      } catch (err) {
+        console.error("Failed to set raw mode:", err.message);
+      }
     }
     process.stdin.resume();
 
@@ -36,7 +41,7 @@ class TerminalSession {
 
     // after getting the data from shell writing it to host terminal
     this.shell.onData((data) => {
-      if (ECHO_TO_STDOUT) {
+      if (ECHO_TO_STDOUT && this.readyForEcho) {
         // this write the user input to the host terminal
         process.stdout.write(data);
       }
@@ -64,7 +69,7 @@ class TerminalSession {
   }
 
   write(data) {
-    if (this.shell) {
+    if (this.shell && !this.exit) {
       this.shell.write(data);
     }
   }

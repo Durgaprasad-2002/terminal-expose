@@ -12,8 +12,8 @@ function setupSocket(server, terminalSession) {
   io.use((socket, next) => {
     const token = socket.handshake.auth?.token;
 
-    if (token !== SESSION_TOKEN) {
-      return next(new Error("unauthorized"));
+    if (!token || token !== SESSION_TOKEN) {
+      return next(new Error("unauthorized: invalid or missing token"));
     }
 
     return next();

@@ -1,3 +1,5 @@
+const { printClientUsage } = require("./logs");
+
 function parseArgs(args) {
   const options = {
     publicTunnel: false,
@@ -49,4 +51,49 @@ function parseArgs(args) {
   return { options, commandArgs };
 }
 
-module.exports = { parseArgs };
+function parseClientArgs(args) {
+  const result = {
+    url: null,
+    token: null,
+    noResize: false,
+    debug: false,
+  };
+
+  for (let i = 0; i < args.length; i += 1) {
+    const arg = args[i];
+
+    if (arg === "--help" || arg === "-h") {
+      printClientUsage();
+      process.exit(0);
+    }
+
+    if (arg === "--no-resize") {
+      result.noResize = true;
+      continue;
+    }
+
+    if (arg === "--debug") {
+      result.debug = true;
+      continue;
+    }
+
+    if (!arg.startsWith("--")) {
+      if (!result.url) {
+        const match = arg.match(/^(https?:\/\/[^/]+)\/s\/(.+)$/);
+
+        if (match) {
+          result.url = match[1];
+          result.token = match[2];
+        } else {
+          result.url = arg;
+        }
+      } else if (!result.token) {
+        result.token = arg;
+      }
+    }
+  }
+
+  return result;
+}
+
+module.exports = { parseArgs, parseClientArgs };

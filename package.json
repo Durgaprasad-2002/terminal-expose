@@ -1,19 +1,22 @@
 {
   "name": "terminal-expose",
-  "version": "1.2.1",
+  "version": "1.3.0",
   "description": "Interactive terminal session sharing over HTTP and WebSocket.",
   "main": "index.js",
   "bin": {
-    "terminal-expose": "index.js"
+    "terminal-expose": "index.js",
+    "terminal-expose-cli": "cli-client.js"
   },
   "files": [
     "index.js",
+    "cli-client.js",
     "src"
   ],
   "scripts": {
     "start": "node index.js",
     "start:shell": "node index.js bash",
     "start:public": "node index.js --public bash",
+    "connect:public": "node cli-client.js",
     "test": "node --check index.js",
     "pack:dry": "npm pack --dry-run"
   },
@@ -31,9 +34,11 @@
     "node": ">=18"
   },
   "dependencies": {
+    "cloudflared": "^0.7.1",
     "express": "^5.2.1",
     "node-pty": "^1.1.0",
     "socket.io": "^4.8.3",
+    "socket.io-client": "^4.8.3",
     "untun": "^0.1.3"
   }
 }

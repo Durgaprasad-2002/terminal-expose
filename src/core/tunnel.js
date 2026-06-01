@@ -1,40 +1,56 @@
-const { startTunnel } = require("untun");
+const { spawn } = require("child_process");
 
 async function startPublicTunnel(options, { HOST, PORT, SESSION_TOKEN }) {
   const localHost = HOST === "0.0.0.0" || HOST === "::" ? "127.0.0.1" : HOST;
 
-  if (options.tunnelSubdomain || options.tunnelHost) {
-    console.warn(
-      "Warning: Custom subdomain and tunnel host are not supported with Cloudflare Quick Tunnels.",
-    );
-  }
+  // spinning the cloudflare tunnel for exposing the localhost url's to public
+  const cloudflared = await spawn(
+    "cloudflared",
+    ["tunnel", "--url", `http://${localHost}:${PORT}`, "--no-autoupdate"],
+    {
+      stdio: ["ignore", "pipe", "pipe"],
+    },
+  );
 
-  console.log("Public tunnel: starting cloudflared...");
+  const publicUrl = await new Promise((resolve, reject) => {
+    const timeout = setTimeout(() => {
+      reject(new Error("Cloudflare tunnel timeout"));
+    }, 30000);
 
-  try {
-    const tunnel = await startTunnel({
-      port: PORT,
-      hostname: localHost,
-      acceptCloudflareNotice: true,
+    cloudflared.stderr.on("data", (data) => {
+      const text = data.toString();
+      const match = text.match(/https:\/\/[-a-z0-9]+\.trycloudflare\.com/);
+
+      if (match) {
+        clearTimeout(timeout);
+        resolve(`${match[0]}/s/${SESSION_TOKEN}`);
+      }
     });
 
-    const url = await tunnel.getURL();
-    const publicUrl = `${url.replace(/\/$/, "")}/s/${SESSION_TOKEN}`;
-
-    console.log(`Public URL: ${publicUrl}`);
-
-    ["SIGINT", "SIGTERM"].forEach((signal) => {
-      process.once(signal, async () => {
-        await tunnel.close();
-        process.kill(process.pid, signal);
-      });
+    cloudflared.on("error", (err) => {
+      clearTimeout(timeout);
+      reject(err);
     });
 
-    return tunnel;
-  } catch (error) {
-    console.error(`Public tunnel error: ${error.message}`);
-    throw error;
-  }
+    cloudflared.on("exit", (code) => {
+      if (code !== 0) {
+        clearTimeout(timeout);
+        reject(new Error(`Cloudflare exited ${code}`));
+      }
+    });
+  });
+
+  // wait 10 seconds
+  await new Promise((resolve) => setTimeout(resolve, 10000));
+
+  return {
+    url: publicUrl,
+    close() {
+      cloudflared.kill();
+    },
+  };
 }
 
-module.exports = { startPublicTunnel };
+module.exports = {
+  startPublicTunnel,
+};
