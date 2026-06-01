@@ -1,11 +1,18 @@
 const { spawn } = require("child_process");
+const { bin, install } = require("cloudflared");
+const fs = require("node:fs");
 
 async function startPublicTunnel(options, { HOST, PORT, SESSION_TOKEN }) {
   const localHost = HOST === "0.0.0.0" || HOST === "::" ? "127.0.0.1" : HOST;
 
+  if (!fs.existsSync(bin)) {
+    // install cloudflared binary
+    await install(bin);
+  }
+
   // spinning the cloudflare tunnel for exposing the localhost url's to public
   const cloudflared = await spawn(
-    "cloudflared",
+    bin,
     ["tunnel", "--url", `http://${localHost}:${PORT}`, "--no-autoupdate"],
     {
       stdio: ["ignore", "pipe", "pipe"],
